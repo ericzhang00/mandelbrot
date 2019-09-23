@@ -31,8 +31,8 @@ ComplexNumber* ComplexProduct(ComplexNumber* a, ComplexNumber* b)
 {
     //YOUR CODE HERE
 		struct ComplexNumber *new = (struct ComplexNumber*) malloc(sizeof(ComplexNumber));
-		new->real = a->real * b->real - a->imaginary * b->imaginary;
-		new->imaginary = a->real * b->imaginary + a->imaginary * b->real;
+		new->real = Re(a) * Re(b) - Im(a) * Im(b);
+		new->imaginary = Re(a) * Im(b) + Im(a) * Re(b);
 		return *new;
 }
 
@@ -41,8 +41,8 @@ ComplexNumber* ComplexSum(ComplexNumber* a, ComplexNumber* b)
 {
     //YOUR CODE HERE
 		struct ComplexNumber *new = (struct ComplexNumber*) malloc(sizeof(ComplexNumber));
-		new->real = a->real + b->real;
-		new->imaginary = a->imaginary + b->imaginary;
+		new->real = Re(a) + Re(b);
+		new->imaginary = Im(a) + Im(b);
 		return *new;
 }
 
@@ -50,7 +50,7 @@ ComplexNumber* ComplexSum(ComplexNumber* a, ComplexNumber* b)
 double ComplexAbs(ComplexNumber* a)
 {
     //YOUR CODE HERE
-	return pow(pow(a->real, 2) + pow(a->imaginary, 2), 0.5);
+	return pow(pow(Re(a), 2) + pow(Im(a), 2), 0.5);
 }
 
 void freeComplexNumber(ComplexNumber* a)
