@@ -31,6 +31,8 @@ u_int64_t MandelbrotIterations(u_int64_t maxiters, ComplexNumber * point, double
     z = ComplexSum(temp, c);
     freeComplexNumber(temp);
   }
+  freeComplexNumber(c);
+  freeComplexNumber(z);
   return 0;
 }
 
