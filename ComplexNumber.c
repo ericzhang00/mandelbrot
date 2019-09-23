@@ -23,7 +23,7 @@ ComplexNumber* newComplexNumber(double real_component, double imaginary_componen
 		struct ComplexNumber *new = (struct ComplexNumber*) malloc(sizeof(ComplexNumber));
 		new->real = real_component;
 		new->imaginary = imaginary_component;
-		return *new;
+		return new;
 }
 
 //Returns a pointer to a new Complex Number equal to a*b
@@ -33,7 +33,7 @@ ComplexNumber* ComplexProduct(ComplexNumber* a, ComplexNumber* b)
 		struct ComplexNumber *new = (struct ComplexNumber*) malloc(sizeof(ComplexNumber));
 		new->real = Re(a) * Re(b) - Im(a) * Im(b);
 		new->imaginary = Re(a) * Im(b) + Im(a) * Re(b);
-		return *new;
+		return new;
 }
 
 //Returns a pointer to a new Complex Number equal to a+b
@@ -43,14 +43,14 @@ ComplexNumber* ComplexSum(ComplexNumber* a, ComplexNumber* b)
 		struct ComplexNumber *new = (struct ComplexNumber*) malloc(sizeof(ComplexNumber));
 		new->real = Re(a) + Re(b);
 		new->imaginary = Im(a) + Im(b);
-		return *new;
+		return new;
 }
 
 //Returns the absolute value of Complex Number a
 double ComplexAbs(ComplexNumber* a)
 {
     //YOUR CODE HERE
-	return pow(pow(Re(a), 2) + pow(Im(a), 2), 0.5);
+	return sqrt(pow(Re(a), 2) + pow(Im(a), 2));
 }
 
 void freeComplexNumber(ComplexNumber* a)
