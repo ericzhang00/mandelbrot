@@ -76,8 +76,8 @@ void printUsage(char* argv[])
 			fprintf(outputfile, "%lu ", iterations);
 		}
 		fputc('\n', outputfile);
-	}	
-	
+	}
+
 	fclose(outputfile);
 
 	//END STEP 3
