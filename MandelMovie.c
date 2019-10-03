@@ -39,6 +39,10 @@ void MandelMovie(double threshold, u_int64_t max_iterations, ComplexNumber* cent
 //    }
 //    Mandelbrot(threshold, max_iterations, center, finalscale, resolution, output[i]);
     double scale = initialscale;
+    if (framecount == 1) {
+      Mandelbrot(threshold, max_iterations, center, finalscale, resolution, output[0]);
+      return;
+    }
     for (int frame = 0; frame < framecount; frame = frame + 1) {
       Mandelbrot(threshold, max_iterations, center, scale, resolution, output[frame]);
       scale = scale * exp(log(finalscale / initialscale) / (framecount - 1));
@@ -158,7 +162,7 @@ int main(int argc, char* argv[])
 	//YOUR CODE HERE
   for (int i = 0; i < framecount; i = i + 1) {
     char buffer[100];
-    sprintf(buffer, "%sframe%05d.ppm", argv[9], i);
+    sprintf(buffer, "%s/frame%05d.ppm", argv[9], i);
     FILE *out = fopen(buffer, "w+");
     if (out == NULL) {
       for (int k  = framecount - 1; k >= 0; k = k - 1) {
