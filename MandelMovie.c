@@ -78,11 +78,14 @@ int main(int argc, char* argv[])
 	resolution = (u_int64_t)atoi(argv[8]);
   colorfile = argv[10];
   colorcount = (int *) malloc(sizeof(int));
+  if (colorcount == NULL) {
+     freeComplexNumber(center);
+     return 1;
+}
   colors = FileToColorMap(colorfile, colorcount);
-  if (colorcount == NULL || colors == NULL) {
+  if (colors == NULL) {
     freeComplexNumber(center);
     free(colorcount);
-    free(colors);
     return 1;
   }
 
@@ -123,7 +126,7 @@ int main(int argc, char* argv[])
         free(arr[j]);
       }
       for (int j = 0; j < *colorcount; j = j + 1) {
-        free(colors[i]);
+        free(colors[j]);
       }
       free(colors);
       free(arr);
@@ -154,8 +157,8 @@ int main(int argc, char* argv[])
       for (int k  = framecount - 1; k >= 0; k = k - 1) {
         free(arr[k]);
       }
-      for (int i = 0; i < *colorcount; i = i + 1) {
-        free(colors[i]);
+      for (int j = 0; j < *colorcount; j = j + 1) {
+        free(colors[j]);
       }
       free(colors);
       free(arr);
