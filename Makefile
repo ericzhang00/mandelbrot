@@ -2,10 +2,10 @@ CC = gcc
 CFLAGS = -lm -g
 
 Mandelbrot: ComplexNumber.o Mandelbrot.o MandelFrame.o
-	$(CC) -o MandelFrame ComplexNumber.o Mandelbrot.o MandelFrame.o -lm -g
+	$(CC) -o MandelFrame ComplexNumber.o Mandelbrot.o MandelFrame.o $(CFLAGS)
 
 MandelMovie: ComplexNumber.o Mandelbrot.o MandelMovie.o ColorMapInput.o
-	$(CC) -o $@ ComplexNumber.o Mandelbrot.o MandelMovie.o ColorMapInput.o -lm -g
+	$(CC) -o $@ ComplexNumber.o Mandelbrot.o MandelMovie.o ColorMapInput.o $(CFLAGS)
 
 colorPalette: ColorMapInput.o colorPalette.o
 	$(CC) -o $@ ColorMapInput.o colorPalette.o $(CFLAGS)
