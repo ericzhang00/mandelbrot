@@ -50,9 +50,10 @@ void Mandelbrot(double threshold, u_int64_t max_iterations, ComplexNumber* cente
     for (int row = 0; row < resolution * 2 + 1; row = row + 1) {
       for (int col = 0; col < resolution * 2 + 1; col = col + 1) {
         ComplexNumber* curr = newComplexNumber(Re(center) - scale + col * increase, Im(center) + scale - row * increase);
-        *(output + offset) = MandelbrotIterations(max_iterations, curr, threshold);
+        output[offset] = MandelbrotIterations(max_iterations, curr, threshold);
         freeComplexNumber(curr);
         offset = offset + 1;
       }
     }
+
 }

@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <math.h>
 #include "ComplexNumber.h"
 #include "Mandelbrot.h"
@@ -28,14 +29,15 @@ if initialscale=1024, finalscale=1, framecount=11, then your frames will have sc
 As another example, if initialscale=10, finalscale=0.01, framecount=5, then your frames will have scale 10, 10 * (0.01/10)^(1/4), 10 * (0.01/10)^(2/4), 10 * (0.01/10)^(3/4), 0.01 .
 */
 void MandelMovie(double threshold, u_int64_t max_iterations, ComplexNumber* center, double initialscale, double finalscale, int framecount, u_int64_t resolution, u_int64_t ** output){
-    //YOUR CODE HERE
+    // YOUR CODE HERE
     int i = 0;
-    for (double scale = initialscale; scale != finalscale; scale = scale * exp(log(finalscale / initialscale) / framecount)) {
+    for (double scale = initialscale; scale != finalscale; scale = scale * exp(log(finalscale / initialscale) / (framecount - 1))) {
       Mandelbrot(threshold, max_iterations, center, scale, resolution, output[i]);
       i = i + 1;
     }
     Mandelbrot(threshold, max_iterations, center, finalscale, resolution, output[i]);
 }
+
 
 /**************
 **This main function converts command line inputs into the format needed to run MandelMovie.
@@ -86,14 +88,13 @@ int main(int argc, char* argv[])
 
   if (threshold <= 0 || maxiterations <= 0 || initialscale <= 0
     || finalscale <= 0 || framecount > 10000 || framecount <= 0
-    || resolution < 0 || (framecount == 1 && initialscale !=finalscale)) {
+    || resolution < 0 || (framecount == 1 && initialscale != finalscale)) {
       freeComplexNumber(center);
       for (int i = 0; i < (*colorcount); i = i + 1) {
         free(colors[i]);
       }
       free(colorcount);
       free(colors);
-      printUsage(argv);
       return 1;
   }
 
@@ -121,7 +122,7 @@ int main(int argc, char* argv[])
       for (int j = i - 1; j >= 0; j = j - 1) {
         free(arr[j]);
       }
-      for (int i = 0; i < *colorcount; i = i + 1) {
+      for (int j = 0; j < *colorcount; j = j + 1) {
         free(colors[i]);
       }
       free(colors);
@@ -134,6 +135,8 @@ int main(int argc, char* argv[])
   MandelMovie(threshold, maxiterations, center, initialscale, finalscale, framecount, resolution, arr);
 
 
+
+
 	//STEP 3: Output the results of MandelMovie to .ppm files.
 	/*
 	Convert from iteration count to colors, and output the results into output files.
@@ -144,21 +147,40 @@ int main(int argc, char* argv[])
 
 	//YOUR CODE HERE
   for (int i = 0; i < framecount; i = i + 1) {
-    char buffer[strlen(argv[9]) + 16];
-    int ones = i % 10;
-    int tens = (i % 100) / 10;
-    int hundreds = (i % 1000) / 100;
-    int thousands = (i % 10000) / 1000;
-    int tenthousands = (i % 100000) / 10000;
-    sprintf(buffer, "%s/frame%d%d%d%d%d.ppm", argv[9], tenthousands, thousands,
-    hundreds, tens, ones);
-    FILE *out = fopen(buffer, "w");
-    fprintf(out, "%s %llu %llu %u\n", "P6", size, size, 255);
-    for (int j = 0; j < size * size; j = j + 1) {
-      fwrite(colors[(arr[i][j] % *colorcount) - 1], sizeof(uint8_t), 3, out);
+    char buffer[100];
+    sprintf(buffer, "%sframe%05d.ppm", argv[9], i);
+    FILE *out = fopen(buffer, "w+");
+    if (out == NULL) {
+      for (int k  = framecount - 1; k >= 0; k = k - 1) {
+        free(arr[k]);
+      }
+      for (int i = 0; i < *colorcount; i = i + 1) {
+        free(colors[i]);
+      }
+      free(colors);
+      free(arr);
+      free(colorcount);
+      freeComplexNumber(center);
+      return 1;
     }
+
+    fprintf(out, "%s %lu %lu %u\n", "P6", size, size, 255);
+    for (int j = 0; j < size * size; j = j + 1) {
+		if((arr[i][j] % (*colorcount)) == 0) {
+			uint8_t *black = (uint8_t *) malloc(3 * sizeof(uint8_t));
+			black[0] = 0;
+			black[1] = 0;
+			black[2] = 0;
+			fwrite(black, sizeof(uint8_t), 3, out);
+			free(black);
+		} else {
+			fwrite(colors[((arr[i][j]-1) % (*colorcount))], sizeof(uint8_t), 3, out);
+		}
+}	
     fclose(out);
-  }
+  
+}
+
 
 
 
@@ -170,8 +192,7 @@ int main(int argc, char* argv[])
 	//YOUR CODE HERE
   freeComplexNumber(center);
   for (int i = 0; i < *colorcount; i = i + 1) {
-    free(colors[i]);
-  }
+    free(colors[i]);}
   for (int i = 0; i < framecount; i = i + 1) {
     free(arr[i]);
   }
@@ -179,5 +200,5 @@ int main(int argc, char* argv[])
   free(arr);
   free(colorcount);
   return 0;
-
 }
+
